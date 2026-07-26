@@ -8,7 +8,8 @@ import os
 # haarcascase is a pre-trained model to detect faces
 
 video = cv2.VideoCapture(0) # the 0 means default camera
-facedetect = cv2.CascadeClassifier('C:/Users/divye/OneDrive/Desktop/FaceRecognitionProject/Data/haarcascade_frontalface_default.xml')
+os.makedirs("Faces", exist_ok=True)
+facedetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 faces_data = [] # list to store the faces
 i = 0
@@ -27,18 +28,18 @@ while True:
         
     for (x,y,w,h) in faces:  # for each face detected at coordinates (x,y) with width w and height h
         cv2.rectangle(frame,(x,y),(x+w+10,y+h+10),(0,255,0),2) # draw rectangle around the face
-        face = frame[y:y+h+10,x:x+w+10 , :]  # crop the face from the frame
+        face = frame[y:y+h+10,x:x+w+10]  # crop the face from the frame
         face = cv2.resize(face,(250,250))
         if len(faces_data)<100:  # store only 100 faces
             faces_data.append(face)  # add the face to the list
         i  += 1
         cv2.putText(frame,str(len(faces_data)),(50,50),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,0),3) # display the number of faces collected
         cv2.rectangle(frame,(x,y),(x+w+10,y+h+10),(0,255,0),2)
-        cv2.imwrite("Data/Faces/user."+str(len(faces))+'.jpg',face) # save the face in the Data/faces folder
+        cv2.imwrite("Faces/user."+str(len(faces))+'.jpg',face) # save the face in the Data/faces folder
         
-    cv2.imshow("My Face - PRESS 'q' to quit.",frame)
+    cv2.imshow("My Face - PRESS 'Q' to quit.",frame)
     k=cv2.waitKey(30)  # wait for 10 ms for a key press
-    if k == ord('q') or len(faces_data) >= 100:
+    if k == ord('Q') or len(faces_data) >= 100:
         break
     
 video.release()  # release the camera (free the camera)
@@ -55,22 +56,22 @@ name = input("Enter the name of the person : ")
 
 # create a names list of size 100 
 # cause thats how many pictures are taken for each person
-# if already list hai , then 
+# if already list exists, then 
 # concatenate
 
-if 'names.pk1' not in os.listdir('Data/'):
+if 'names.pk1' not in os.listdir('.'):
     names = [name]*100
-    with open('Data/names.pk1','wb') as f:  # wb means write binary
+    with open('names.pk1','wb') as f:  # wb means write binary
         pickle.dump(names,f)  # dump the list in the file
 else:
     # --- IF FILE ALREADY EXISTS ----
-    with open('Data/names.pk1','rb') as f:
+    with open('names.pk1','rb') as f:
         names = pickle.load(f)
 
     names = names + [name]*100 # append to the list  
     
     # SAVE IT BACK.
-    with open('Data/names.pk1','wb') as f:
+    with open('names.pk1','wb') as f:
         pickle.dump(names, f)
 
 # same code but now we hold the pixels and pattern for every face
@@ -80,17 +81,17 @@ else:
 # Row(0->99) is for divyesh
 # Row(100->199) is for tanu
 
-if 'faces_data.pk1' not in os.listdir('Data/'):
-    with open('Data/faces_data.pk1','wb') as f:  # wb means write binary
+if 'faces_data.pk1' not in os.listdir('.'):
+    with open('faces_data.pk1','wb') as f:  # wb means write binary
         pickle.dump(faces_data,f)  # dump an empty list if the file does not exist
 else:
-    with open('data/faces_data.pk1','rb') as f:
+    with open('faces_data.pk1','rb') as f:
         faces = pickle.load(f)
 
     faces=np.append(faces,faces_data,axis=0)
     
     # SAVE IT BACK.
-    with open('data/faces_data.pk1','wb') as f:
+    with open('faces_data.pk1','wb') as f:
         pickle.dump(faces,f)
 
 # *************************** STEP 1 COMPLETE ************************
