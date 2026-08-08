@@ -1,4 +1,5 @@
 import cv2
+print("File loaded from:", cv2.__file__)
 import pickle # this helps to save the data in binary format    
 import numpy as np
 import os
@@ -59,19 +60,19 @@ name = input("Enter the name of the person : ")
 # if already list exists, then 
 # concatenate
 
-if 'names.pk1' not in os.listdir('.'):
+if 'names.pkl' not in os.listdir('.'):
     names = [name]*100
-    with open('names.pk1','wb') as f:  # wb means write binary
+    with open('names.pkl','wb') as f:  # wb means write binary
         pickle.dump(names,f)  # dump the list in the file
 else:
     # --- IF FILE ALREADY EXISTS ----
-    with open('names.pk1','rb') as f:
+    with open('names.pkl','rb') as f:
         names = pickle.load(f)
 
     names = names + [name]*100 # append to the list  
     
     # SAVE IT BACK.
-    with open('names.pk1','wb') as f:
+    with open('names.pkl','wb') as f:
         pickle.dump(names, f)
 
 # same code but now we hold the pixels and pattern for every face
@@ -81,20 +82,20 @@ else:
 # Row(0->99) is for divyesh
 # Row(100->199) is for tanu
 
-if 'faces_data.pk1' not in os.listdir('.'):
-    with open('faces_data.pk1','wb') as f:  # wb means write binary
+if 'faces_data.pkl' not in os.listdir('.'):
+    with open('faces_data.pkl','wb') as f:  # wb means write binary
         pickle.dump(faces_data,f)  # dump an empty list if the file does not exist
 else:
-    with open('faces_data.pk1','rb') as f:
+    with open('faces_data.pkl','rb') as f:
         faces = pickle.load(f)
 
     faces=np.append(faces,faces_data,axis=0)
     
     # SAVE IT BACK.
-    with open('faces_data.pk1','wb') as f:
+    with open('faces_data.pkl','wb') as f:
         pickle.dump(faces,f)
 
 # *************************** STEP 1 COMPLETE ************************
 
-# names.pk1 has the labels
-# faces_data.pk1 has the face data in flattened format
+# names.pkl has the labels
+# faces_data.pkl has the face data in flattened format
